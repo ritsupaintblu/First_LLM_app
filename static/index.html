@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Mini chat</title>
+<h1>Mini chat</h1>
+<input id="msg" placeholder="Ask something…" size="40">
+<button id="send">Send</button>
+<pre id="out"></pre>
+<script>
+  const out = document.getElementById("out");
+  document.getElementById("send").onclick = async () => {
+    out.textContent = "…thinking…";
+    const message = document.getElementById("msg").value;
+    const r = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    });
+    const data = await r.json();
+    out.textContent = r.ok ? data.reply : `Error ${r.status}: ${JSON.stringify(data.detail)}`;
+  };
+</script>
